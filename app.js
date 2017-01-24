@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var moment = require('moment');
+var serialport = require("serialport");
+var SerialPort = serialport;
+var config = require('./config');
 
 //public files
 app.use(express.static('public'));
@@ -21,19 +24,30 @@ var server = app.listen(8081, function () {
 })
 
 // Make CSV file if it does exist. Use these headings:
-// timestamp, temperature
+// timestamp, temperature... etc
 if (fs.existsSync('public/data.csv')==false){
-  fs.writeFile('public/data.csv', 'timestamp,temperature\n', (err) => {
+  fs.writeFile('public/data.csv', 'timestamp,dht22_temp,bmp_180_temp,dht22_hum,bmp_180_presure\n', (err) => {
   if (err) throw err;
     console.log('CSV file created');
   });
 }
+//var serialPort = new SerialPort("/dev/ttyACM0", {
+var serialPort = new SerialPort(config.serialPort, {
+  baudrate: config.baudrate,
+  parser: serialport.parsers.readline("\n")
+});
 
-// Append new data from serialport to the CSV
-var data=moment().format() + "," + "49\n";
-fs.appendFile('public/data.csv', data, (err) => {
-  if(err) {
-      return console.log(err);
-  }
-  console.log('The data was appended to file!');
+serialPort.on("open", function () {
+  console.log('open');
+  serialPort.on('data', function(data) {
+    console.log(data);
+    // Append new data from serialport to the CSV
+    var data=moment().format() + "," + data + "\n";
+    fs.appendFile('public/data.csv', data, (err) => {
+      if(err) {
+          return console.log(err);
+      }
+      console.log('The data was appended to file!');
+    });
+  });
 });

@@ -1,7 +1,7 @@
 {
   "name": "node-serialport",
   "version": "1.0.0",
-  "description": "",
+  "description": "Final year project - work in progress, will provide a detailed readme as the project progresses",
   "main": "app.js",
   "dependencies": {
     "d3": "^4.4.0",
@@ -14,5 +14,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulsarms/weatherstation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paulsarms/weatherstation/issues"
+  },
+  "homepage": "https://github.com/paulsarms/weatherstation#readme"
 }
