@@ -43,14 +43,7 @@ serialPort.on("open", function () {
   console.log('open');
   serialPort.on('data', function(data) {
     console.log(data);
-    // for validating the data I'm using a regexp to check that:
-        // temperature is between -99.99 and 99.99,
-        // humidity is between 0.00 and 99.99,
-        // pressure is between 5 and 6 digits for the Pascal value
-    var re = new RegExp("^-?\d{1,2}.\d\d,-?\d{1,2}.\d\d,\d{1,2}.\d\d,\d{5,6}$");
-    if (re.test(data)) {
-      console.log("it's grand sure");
-      // Data is valid, append it to the CSV
+
       var data=moment().format() + "," + data + "\n";
       fs.appendFile(appDir + '/public/data.csv', data, (err) => {
         if(err) {
@@ -58,11 +51,6 @@ serialPort.on("open", function () {
         }
         console.log('The data was appended to file!');
       }); // Append new data from serialport to the CSV
-    }
-    else {
-      // Data failed the regexp test
-      console.log("Data is invalid, not saved")
-      // do something... maybe email me the invalid data if it's invalid more than once in a row
-    }
+
   });
 });

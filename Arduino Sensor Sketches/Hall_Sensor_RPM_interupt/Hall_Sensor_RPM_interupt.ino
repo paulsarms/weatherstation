@@ -16,31 +16,46 @@ http://www.hobbytronics.co.uk/arduino-tutorial11-hall-effect
 */
 
 // constants won't change. They're used here to set pin numbers:
-const int hallPin = 3;     // the number of the hall effect sensor pin
+const int hallPin = 2;     // the number of the hall effect sensor pin
 const int ledPin =  13;     // the number of the LED pin
 // variables will change:
 int hallState = 0;          // variable for reading the hall sensor status
+int i = 0;
+unsigned long t;            //time variables
+unsigned long cur_t=0;      // cur_t is defaulted to 0
+unsigned long t_diff;
+float rpm;
 
 void setup() {
   // initialize the LED pin as an output:
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);      
   // initialize the hall effect sensor pin as an input:
-  pinMode(hallPin, INPUT);     
+  pinMode(hallPin, INPUT);  
+   attachInterrupt (digitalPinToInterrupt(hallPin), Anenometer_Rev, RISING);  // attach interrupt handler   
 }
 
 void loop(){
-  // read the state of the hall effect sensor:
-  hallState = digitalRead(hallPin);
-
-  if (hallState == LOW) {     
-    // turn LED on:    
-    digitalWrite(ledPin, HIGH);
-    Serial.println("on"); 
-  } 
-  else {
-    // turn LED off:
-    digitalWrite(ledPin, LOW); 
-   // Serial.println("off"); 
-  }
+ delay(2000);
+    Serial.print("rpm is: ");
+    Serial.println(rpm);                    //print the rpm
+    Serial.print("time per revolution: ");
+    Serial.println(t_diff);
+    Serial.print("number of revolutions: ");
+    Serial.println(i);
 }
+
+void Anenometer_Rev(){
+  if (t==0) {
+    t=millis();
+  }
+  else {
+    cur_t=millis();
+    rpm = 1000.00*60/(cur_t-t);
+    t_diff= cur_t-t;
+    t=0;
+  
+  }
+  i++;
+}
+

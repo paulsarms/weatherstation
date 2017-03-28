@@ -16,31 +16,26 @@ http://www.hobbytronics.co.uk/arduino-tutorial11-hall-effect
 */
 
 // constants won't change. They're used here to set pin numbers:
-const int hallPin = 3;     // the number of the hall effect sensor pin
-const int ledPin =  13;     // the number of the LED pin
-// variables will change:
-int hallState = 0;          // variable for reading the hall sensor status
+const int rain_hallPin = 3;     // the number of the hall effect sensor pin
 
+// variables will change:
+unsigned long bucket_tips = 0;
+unsigned long t,cur_t;//time variables
 void setup() {
-  // initialize the LED pin as an output:
   Serial.begin(9600);
-  pinMode(ledPin, OUTPUT);      
   // initialize the hall effect sensor pin as an input:
-  pinMode(hallPin, INPUT);     
+  pinMode(rain_hallPin, INPUT);  
+   attachInterrupt (digitalPinToInterrupt(rain_hallPin), rainBucketTip, RISING);  // attach interrupt handler   
 }
 
 void loop(){
-  // read the state of the hall effect sensor:
-  hallState = digitalRead(hallPin);
-
-  if (hallState == LOW) {     
-    // turn LED on:    
-    digitalWrite(ledPin, HIGH);
-    Serial.println("on"); 
-  } 
-  else {
-    // turn LED off:
-    digitalWrite(ledPin, LOW); 
-   // Serial.println("off"); 
-  }
+ Serial.println(bucket_tips);
+ Serial.println(t);
+ delay(500);
 }
+
+void rainBucketTip(){
+  t=millis();
+  bucket_tips++;
+}
+

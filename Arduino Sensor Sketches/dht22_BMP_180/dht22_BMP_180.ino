@@ -62,7 +62,7 @@ void loop()
     Serial.print(dht22_hum);
     Serial.print(",");
     Serial.println(bmp.readPressure());
-    delay(60000);
+    delay(60000); // output every minute
 
 }
 

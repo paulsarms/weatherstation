@@ -7,7 +7,7 @@
 #include <DHT.h>;
 
 //Constants
-#define DHT22PIN 6     // what pin we're connected to
+#define DHT22PIN 2     // what pin we're connected to
 #define DHT_1_TYPE DHT22   // DHT 22  (AM2302)
 DHT dht22(DHT22PIN, DHT_1_TYPE); //// Initialize DHT sensor for normal 16mhz Arduino
 

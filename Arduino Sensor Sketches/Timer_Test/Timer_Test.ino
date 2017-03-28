@@ -1,4 +1,4 @@
-unsigned long time;
+unsigned long t;
 
 void setup(){
   Serial.begin(9600);
@@ -6,12 +6,13 @@ void setup(){
 void loop(){
 
   //prints time since program started
-  time = micros();
+  t = micros();
   Serial.print("time in microseconds:  ");
-  Serial.println(time);
-  time = millis();
+  Serial.println(t);
+  t = millis();
   Serial.print("time in Milliseconds:  ");
-  Serial.println(time);
+  Serial.println(t);
   // wait a second so as not to send massive amounts of data
   delay(1000);
 }
+

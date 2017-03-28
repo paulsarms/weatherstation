@@ -18,7 +18,7 @@
    </head>
 
    <body>
-      <h1>testing D3</h1>
+      <h1>My Room Temperature - D3.js testing</h1>
       <svg width="960" height="500"></svg>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script>
@@ -39,12 +39,12 @@
 
   var line = d3.line()
       .x(function(d) { return x(d.timestamp); })
-      .y(function(d) { return y(d.temperature); });
+      .y(function(d) { return y(d.dht22_temp); });
 
   d3.csv("data.csv", function(d) {
     //d.forEach(function(d) {
       d.timestamp = parseTime(d.timestamp);
-      d.temperature = +d.temperature;
+      d.dht22_temp = +d.dht22_temp;
   //  });
     console.log(d);
     return d;
@@ -52,7 +52,7 @@
     if (error) throw error;
 
     x.domain(d3.extent(data, function(d) { return d.timestamp; }));
-    y.domain(d3.extent(data, function(d) { return d.temperature; }));
+    y.domain(d3.extent(data, function(d) { return d.dht22_temp; }));
 
     g.append("g")
         .attr("class", "axis axis--x")
@@ -68,7 +68,7 @@
         .attr("y", 6)
         .attr("dy", "0.71em")
         .style("text-anchor", "end")
-        .text("Price ($)");
+        .text("Temperature ($)");
 
     g.append("path")
         .datum(data)
