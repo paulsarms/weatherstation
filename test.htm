@@ -60,7 +60,7 @@
                 "translate(" + margin.left + "," + margin.top + ")");
 
       // Get the data
-      d3.csv("scrubbed.csv", function(error, data) {
+      d3.csv("data.csv", function(error, data) {
           data.forEach(function(d) {
             d.timestamp = parseTime(d.timestamp);
             d.dht22_temp = +d.dht22_temp;

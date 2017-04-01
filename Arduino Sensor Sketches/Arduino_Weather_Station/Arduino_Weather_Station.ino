@@ -64,7 +64,8 @@ float lastDUSTPM10 =0.0;
 unsigned long duration;
 unsigned long starttime;
 unsigned long endtime;
-unsigned long sampletime_ms = 3000;
+// Time measuing the low pulse occupancy for the DSM. Does this for pm10 and pm25 so average loop time is approx 30 seconds:
+unsigned long sampletime_ms = 15000; // A lower the sample time make for lower sensor accuracy
 unsigned long lowpulseoccupancy = 0;
 float ratio = 0;
 long concentrationPM25 = 0;
@@ -72,18 +73,19 @@ long concentrationPM10 = 0;
 long concentration;
 float ppmv;
 
-float  dht22_hum;  //Stores dht22 humidity value
-float dht22_temp; //Stores dht22 temperature value
-float bmp_180_temp; //Stores bmp180 temperature value
-float bmp_180_presure; //Stores bmp180 pressure value
+float  dht22_hum;         //Stores dht22 humidity value
+float dht22_temp;         //Stores dht22 temperature value
+float bmp_180_temp;       //Stores bmp180 temperature value
+float bmp_180_presure;     //Stores bmp180 pressure value
+int bmp_pressure_pascal;
 String output;
 
 unsigned long wind_t;            //time variable for the anenometer
 unsigned long wind_cur_t=0;      // cur_t is defaulted to 0
-unsigned long wind_t_diff;      // time for one revolution of the anonometer
+unsigned long wind_t_diff;       // time for one revolution of the anonometer
 unsigned long wind_num_revs=0; 
-volatile float rpm;                      // RPM of the Anenometer
-volatile int bucket_tips = 1;  // Number of Rain Guage bucket tips
+volatile float rpm= 0;           // RPM of the Anenometer
+volatile int bucket_tips = 0;    // Number of Rain Guage bucket tips
 
 
 void setup()  
@@ -143,7 +145,7 @@ void loop()
       bmp.readTemperature();
       bmp.readAltitude();
       bmp.readSealevelPressure();
-      bmp_180_presure = bmp.readPressure();  
+      bmp_180_presure = bmp.readPressure(); 
   
   /*  END Code for DHT22 and BMP80 Sensor reading */
   
@@ -152,20 +154,7 @@ void loop()
   
       // output sensor values to console in CSV format:
       // dht22_temp, bmp_180_temp, dht22_hum, bmp_180_presure, concentrationPM10, concentrationPM25, rpm, bucket_tips
-     // Serial.print("\n");
-    //  Serial.println("Temp (DHT), Temp (BMP), Humidity, Pressure, PM10, PM25");
-     // Serial.print(dht22_temp);
-      //Serial.print(",");
-      //Serial.print(bmp_180_temp);
-      //Serial.print(",");
-      //Serial.print(dht22_hum);
-      //Serial.print(",");
-      //Serial.print(bmp_180_presure);
-      //Serial.print(",");
-      //Serial.print(concentrationPM10);
-      //Serial.print(",");
-      //Serial.println(concentrationPM25);
-
+  
       output =   String(dht22_temp) + ',' + 
                  String(bmp_180_temp) + ',' + 
                  String(dht22_hum) + ',' + 
@@ -178,6 +167,10 @@ void loop()
        
        Serial.println(output);
        send(output);
+
+       //Reset variables after sample time:
+       rpm = 0;
+       bucket_tips = 0;
        
        //send(String(dht22_temp)+ ",");
      //  send(String(bmp_180_temp)+ ",");
@@ -186,7 +179,7 @@ void loop()
      //  send(String(concentrationPM10)+ ",");
      //  send(String(concentrationPM25));
   /*  END Code for outputing sensor data to external devices */
- delay(1000);
+ //delay(1000);
 }
 
 // Get particulate matter concentration:
@@ -202,7 +195,7 @@ long getPM(int DUST_SENSOR_DIGITAL_PIN) {
     if ((endtime-starttime) > sampletime_ms)
     {
     ratio = (lowpulseoccupancy-endtime+starttime)/(sampletime_ms*10.0);  // Integer percentage 0=>100
-    if (lowpulseoccupancy==0){ // pulseIn(pin, low) returns 0 when no low value is detected 
+    if (lowpulseoccupancy<=0){ // pulseIn(pin, low) returns 0 when no low value is detected 
       concentration = 0;
     }
     else {
@@ -232,7 +225,7 @@ void send(String message){
       vw_wait_tx(); // Wait until the whole message is gone
      // Serial.print(msg);
     }
-    Serial.print("\n");
+   // Serial.print("\n");
   }
   else {
     String my_message = message;
