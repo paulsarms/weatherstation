@@ -32,10 +32,10 @@ module.exports = {
               // temperature is between -99.99 and 99.99,
               // humidity is between 0.00 and 99.99,
               // pressure is between 5 and 6 digits for the Pascal value, with 2 decimal points
-              // pm10 and pm25 between 1 and 7 digits, etc
-        //  var re = new RegExp("^-?\d{1,2}.\d\d,-?\d{1,2}.\d\d,\d{1,2}.\d\d,\d{5,6}.\d\d,?\d{1,7},?\d{1,7},?\d{1,6}.\d\d,?\d{1,2},");
-
-            console.log("data is good");
+              // pm10 and pm25 between 1 and 7 digita
+          var re = new RegExp("^-?\d{1,2}.\d\d,-?\d{1,2}.\d\d,\d{1,2}.\d\d,\d{5,6}.\d\d,?\d{1,7},?\d{1,7},?\d{1,6}.\d\d,?\d{1,2},");
+          if (re.test(data)) {
+            console.log("Data ok");
             // Data is valid, append it to the CSV
             var data=moment().format() + "," + data + "\n";
             fs.appendFile(appDir + '/public/data.csv', data, (err) => {
@@ -44,8 +44,12 @@ module.exports = {
               }
               console.log('The data was appended to file!');
             }); // Append new data from serialport to the CSV
-
-      
+          }
+          else {
+            // Data failed the regexp test
+            console.log("Data is invalid, not saved")
+            // do something... maybe email me the invalid data if it's invalid more than once in a row
+          }
         });
       });
     }
