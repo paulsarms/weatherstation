@@ -46,3 +46,7 @@ jspm_packages
 # Yarn Integrity file
 .yarn-integrity
 
+test
+test/*
+public/test
+public/test/*	
