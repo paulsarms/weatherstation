@@ -1,5 +1,8 @@
 # Arduino Based DIY climate station
 Please note, this repo and readme is a work in progress and will be modified as the project progresses to make building a DIY climate station more accessible and user friendly. 
+
+## Arduino Sketches
+The Arduino Code Directory contains the main weather station arduino sketch, `Arduino_Weather_Station`, as well the base module reciever sketch,`Base_Module_RX_433Mhz`. The sub directoy, "Arduino Code/Sensor Sketches" contains individual sketches for each of the sensors I used.    
     
 ## How to use
 ##### 1. Make sure you have node.js
